@@ -5,10 +5,12 @@ public class MyList<T extends Comparable<T>> {
     private final int INITIAL_CAPACITY = 2;
     private T[] internalArray;
     private int count;
+    private boolean sorted;
 
     public MyList() {
         internalArray = (T[]) new Comparable[INITIAL_CAPACITY];
         count = 0;
+        sorted = false;
     }
 
     public void add(T elem) {
@@ -18,18 +20,19 @@ public class MyList<T extends Comparable<T>> {
         }
         internalArray[count] = elem;
         count++;
+        sorted = false;
     }
 
     public T get(int index) {
         if (index >= count || index < 0) {
-            throw new IndexOutOfBoundsException(String.format("there is no element in list size %d", count));
+            throw new IndexOutOfBoundsException(String.format("Index %d out of bounds for length %d", index, count));
         }
         return internalArray[index];
     }
 
     // Сортировка по возрастанию
-    // Про флаг не очень понятно, можно просто не вызывать метод, если сортировка не нужна
     public void sort() {
+        if (sorted) return;
         for (int i = 0; i < count; i++) {
             for (int j = i + 1; j < count; j++) {
                 if (internalArray[i].compareTo(internalArray[j]) > 0) {
@@ -39,6 +42,7 @@ public class MyList<T extends Comparable<T>> {
                 }
             }
         }
+        sorted = true;
     }
 
     public boolean remove(T elem) {
@@ -70,6 +74,7 @@ public class MyList<T extends Comparable<T>> {
         for (var item : collection) {
             add(item);
         }
+        sorted = false;
     }
 
     private void extendInternalArray() {
